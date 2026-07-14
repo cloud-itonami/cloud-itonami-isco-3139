@@ -1,0 +1,11 @@
+{:itonami.blueprint/id "cloud-itonami-isco-3139"
+ :itonami.blueprint/name "Process Control Technician Operations Coordination"
+ :itonami.blueprint/isco-08 "3139"
+ :itonami.blueprint/domain :operations/process-control
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:industrial-safety :operational-efficiency :worker-coordination]
+ :itonami.blueprint/governor :process-control-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :telemetry]
+ :itonami.blueprint/optional-technologies [:optimization]
+ :itonami.blueprint/status :public-oss}

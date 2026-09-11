@@ -7,7 +7,7 @@ Thank you for your interest in contributing to cloud-itonami-isco-3139!
 ```bash
 git clone https://github.com/cloud-itonami/cloud-itonami-isco-3139.git
 cd cloud-itonami-isco-3139
-clojure -M:test
+kbb -M:test
 ```
 
 ## Code Style
@@ -21,7 +21,7 @@ clojure -M:test
 All pull requests must pass the full test suite:
 
 ```bash
-clojure -M:test
+kbb -M:test
 ```
 
 ## Safety-Critical Areas

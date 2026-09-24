@@ -1,0 +1,40 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a telemetry-monitoring robot performs routine
+;; process readings, maintenance scheduling and anomalous-condition flagging
+;; for process control technicians (ISCO 3139). Its physical work is swapping
+;; field transmitters, keeping an analyser fast loop flowing, and timing how
+;; long a sump takes to drain before an instrument can be reached.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-3139"
+ :cases
+ [{:id :transmitter-swap
+   :kind :manipulator
+   :procedure "arm lifts a replacement pressure/flow transmitter from the tool cart up to its mounting bracket"
+   :params {:l1-m 0.50 :l2-m 0.45 :m1-kg 5.0 :m2-kg 3.5
+            :from [0.60 0.05] :to [0.40 0.70] :duration-s 2.5 :steps 500}
+   :sweep {:param :payload-kg :values [1.0 2.0 3.5 5.0 7.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light collaborative arm (~5 kg payload class) at this reach"}
+   :boundary {:lo 0.1 :hi 30.0}}
+  {:id :analyser-fast-loop
+   :kind :pipe-flow
+   :procedure "process water circulates through a 12 mm, 30 m fast loop to keep the analyser sample fresh"
+   :params {:diameter-m 0.012 :length-m 30.0 :roughness-m 1.5e-6
+            :density-kg-m3 998.0 :viscosity-pa-s 1.0e-3}
+   :sweep {:param :q-m3s :values [5.0e-5 1.0e-4 1.5e-4 2.0e-4 3.0e-4]}
+   :quantity :pressure-drop-pa
+   :limit {:max 150000.0 :basis "estimate: ~1.5 bar differential across the fast-loop take-off and return points"}
+   :boundary {:lo 1.0e-6 :hi 6.0e-4}}
+  {:id :sump-drain-before-access
+   :kind :tank-drain
+   :procedure "instrument sump (0.5 m2) drains through a 25 mm-class outlet to 5 cm before the transmitter below can be reached"
+   :params {:tank-area-m2 0.5 :h-target-m 0.05 :orifice-area-m2 4.9e-4 :cd 0.62}
+   :sweep {:param :h0-m :values [0.3 0.6 1.0 1.5 2.5]}
+   :quantity :time-to-target-s
+   :limit {:max 600.0 :basis "estimate: sump drained within ten minutes so an instrument job fits one permit window"}
+   :boundary {:lo 0.1 :hi 10.0}}]}
